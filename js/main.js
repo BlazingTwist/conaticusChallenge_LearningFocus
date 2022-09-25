@@ -30,6 +30,13 @@
         Main.openEditorModal(null, target);
     }
 
+    Main.addButtonPressed = function addButtonPressed(iconElement) {
+        document.getElementById("question-input").value = "";
+        document.getElementById("question-answer-input").value = "";
+        document.getElementById("question-title-input").value = "";
+        Main.openEditorModal(iconElement, null);
+    }
+
     Main.openEditorModal = function openEditorModal(category, question) {
         if (activeModal) {
             console.warn("tried to open two modals simultaneously!");
@@ -39,11 +46,15 @@
         if (category) {
             targetCategory = category.parentNode.parentNode;
             targetQuestion = null;
+        }else{
+            targetCategory = null;
         }
 
         if (question) {
             targetCategory = null;
             targetQuestion = question;
+        }else{
+            targetQuestion = null;
         }
 
         let modalElement = document.getElementById("editor-modal");
@@ -100,7 +111,7 @@
         addIcon.classList.add("icon-button");
         addIcon.style.marginLeft = "20px";
         addIcon.onclick = () => {
-            Main.openEditorModal(addIcon);
+            Main.addButtonPressed(addIcon);
         }
         categoryTitleDiv.appendChild(addIcon);
 
@@ -140,12 +151,18 @@
             let type = document.getElementById("create-type-select").value;
             if (type === "Group") {
                 let groupName = document.getElementById("group-name-input").value;
+                if (groupName.trim() === "") {
+                    return;
+                }
                 AnimatedList.appendNode(targetCategory || document.getElementById("question-list"), createGroupNode(groupName))
             } else {
                 /**
                  * @type {string}
                  */
                 let questionText = document.getElementById("question-input").value;
+                if (questionText.trim() === "") {
+                    return;
+                }
                 let questionAnswer = document.getElementById("question-answer-input").value;
                 let titleOptional = document.getElementById("question-title-input").value;
                 if (titleOptional.trim() === "") {
